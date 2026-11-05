@@ -32,20 +32,20 @@
 
 ## 踩坑记录
 
-**1. 重置密码后仍无法登录**
-阿里云 ECS 没有默认密码，需在控制台重置实例密码。
-
-**2. 网站打不开，但服务都正常**
+**1. 网站打不开，但服务都正常**
 存在两层防火墙：阿里云安全组（云平台层）和 firewalld（主机层）。任一层未放行都会导致访问超时。排查顺序应固定为：安全组 → firewalld → `ss -tlnp` 看端口监听 → `systemctl` 看服务状态。
 
-**3. MariaDB 默认监听所有网卡**
+**2. MariaDB 默认监听所有网卡**
 安装后 `ss -tlnp` 显示 `*:3306`。通过新增 `/etc/my.cnf.d/99-bind.cnf` 将 `bind-address` 设为 `127.0.0.1`，确保即使外层防护失效，数据库也不会被公网直连。
 
-**4. 页面中文全部显示为问号**
+**3. 页面中文全部显示为问号**
 mysqli 连接默认字符集为 latin1，与库内 utf8mb4 不一致，中文在转换时被替换为 `?`。在连接后显式调用 `set_charset("utf8mb4")` 并设置响应头 `charset=utf-8` 解决。
 
-**5. Nginx 新站点配置不生效**
+**4. Nginx 新站点配置不生效**
 RHEL 系的默认站点直接定义在 `/etc/nginx/nginx.conf` 中且为 `default_server`，在 `conf.d/` 下新建 `listen 80` 站点会冲突被忽略。改用 `/etc/nginx/default.d/` 目录（被默认 server 块 include）后生效。
+
+5.下载了php-fpm，没有php命令
+使用php命令需再装一个php-cli，php-cli是独立包，php-fpm不会自动装它。
 
 ## 后续计划
 
