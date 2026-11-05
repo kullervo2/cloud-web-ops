@@ -44,7 +44,7 @@ mysqli 连接默认字符集为 latin1，与库内 utf8mb4 不一致，中文在
 **4. Nginx 新站点配置不生效**
 RHEL 系的默认站点直接定义在 `/etc/nginx/nginx.conf` 中且为 `default_server`，在 `conf.d/` 下新建 `listen 80` 站点会冲突被忽略。改用 `/etc/nginx/default.d/` 目录（被默认 server 块 include）后生效。
 
-5.下载了php-fpm，没有php命令
+**5.下载了php-fpm，没有php命令**
 使用php命令需再装一个php-cli，php-cli是独立包，php-fpm不会自动装它。
 
 ## 后续计划
