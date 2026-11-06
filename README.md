@@ -30,6 +30,13 @@
 5. 安装 PHP-FPM，在 `/etc/nginx/default.d/` 下配置 fastcgi 转发
 6. 编写业务页面，验证 Nginx → PHP → MariaDB 完整链路
 
+## 监控告警
+
+- Prometheus 采集主机指标（node_exporter），Grafana 展示
+- 告警规则：磁盘 > 80%、CPU > 80%、目标失联
+- Alertmanager 通过 webhook 推送，已完成端到端验证（停止 node_exporter 触发 InstanceDown）
+- 监控组件仅监听 127.0.0.1，通过 SSH 隧道访问，不对公网暴露
+
 ## 踩坑记录
 
 **1. 网站打不开，但服务都正常**
@@ -49,7 +56,6 @@ RHEL 系的默认站点直接定义在 `/etc/nginx/nginx.conf` 中且为 `defaul
 
 ## 后续计划
 
-- [ ] Prometheus + Grafana 监控告警
 - [ ] 数据库自动备份到对象存储，并做恢复演练
 - [ ] 编写巡检脚本与定时任务
 - [ ] 配置 HTTPS 与域名
