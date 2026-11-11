@@ -62,8 +62,13 @@ RHEL 系的默认站点直接定义在 `/etc/nginx/nginx.conf` 中且为 `defaul
 **5.下载了php-fpm，没有php命令**
 使用php命令需再装一个php-cli，php-cli是独立包，php-fpm不会自动装它。
 
-## 后续计划
+## 故障演练
 
-- [ ] 编写巡检脚本与定时任务
-- [ ] 配置 HTTPS 与域名
-- [ ] 故障演练与 Runbook 编写
+| 故障 | 发现方式 | 根因 | 恢复方式 | 耗时 |
+|---|---|---|---|---|
+| 磁盘写满 | HighDiskUsage 告警 | /tmp 大文件 | 清理文件 | 2 分 |
+| Nginx 进程被杀 | 网站 502 | 进程异常退出 | systemd 自动拉起（已配 Restart=always） | 3 秒 |
+| 配置错误 502 | 网站 502 | fastcgi socket 路径错 | 回滚配置 | 5 分 |
+| 连接数打满 | 页面报 Too many connections | max_connections 不足 | 清理连接 + 调参 | 3 分 |
+
+完整处理过程见 [RUNBOOK.md](./RUNBOOK.md)
